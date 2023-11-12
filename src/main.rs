@@ -3,11 +3,19 @@ use std::{
 ,   path::Path, fs, io::prelude::*
 };
 
+use pdf::{
+    file::FileOptions, error::Result, object::*
+};
+
 
 
 fn main() {
     let fileName = GetPDFFileName() ;
     let mut imageCollector = ImageCollector::newWithSavingFolder( fileName.as_str() ) ;
+    let file = FileOptions::cached().open( &fileName ).unwrap() ;
+    for page in file.pages() {
+        imageCollector.ClipImagesFrom( page.unwrap(), &file ) ;
+    }
 }
 
 
@@ -42,5 +50,14 @@ impl ImageCollector
         Self {
             folderName : folderName.to_str().unwrap().to_owned()
         }
+    }
+
+
+    fn ClipImagesFrom( &mut self
+    ,   page : PageRc
+    ,   resolver : &impl Resolve
+    )-> Result< () >
+    {
+        Ok( () )
     }
 }
